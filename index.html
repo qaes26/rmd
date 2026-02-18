@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رمضان مبارك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
+            overflow: hidden;
+            font-family: 'Amiri', serif;
+            touch-action: manipulation; /* Improves touch response */
+        }
+
+        /* --- Typography --- */
+        .ruqaa-font { font-family: 'Aref Ruqaa', serif; }
+        
+        .golden-text {
+            background: linear-gradient(to bottom, #cfc09f 22%, #634f2c 24%, #cfc09f 26%, #cfc09f 27%, #ffecb3 40%, #3a2c0f 78%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent;
+            color: #fff;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .show-text .golden-text {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* --- Lantern Animation --- */
+        .lantern-container {
+            transform-origin: top center;
+            animation: swing 4s infinite ease-in-out;
+            cursor: pointer;
+            z-index: 50;
+        }
+
+        @keyframes swing {
+            0% { transform: rotate(3deg); }
+            50% { transform: rotate(-3deg); }
+            100% { transform: rotate(3deg); }
+        }
+
+        .lantern-svg path {
+            transition: fill 0.5s ease, filter 0.5s ease;
+        }
+
+        /* --- Lighting Effects --- */
+        .glow-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 166, 0, 0.4) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 1.2s ease-out;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .active-scene .glow-overlay {
+            width: 150vmax;
+            height: 150vmax;
+            opacity: 1;
+        }
+
+        .lamp-light {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            mix-blend-mode: screen;
+        }
+        
+        .active-scene .lamp-light {
+            opacity: 1;
+            animation: flicker 3s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* --- Particles --- */
+        .particle {
+            position: absolute;
+            background: gold;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 40;
+        }
+
+        /* --- Background Decoration --- */
+        .pattern-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="h-screen w-full flex flex-col items-center justify-center relative select-none">
+
+    <!-- Ambient Background -->
+    <div class="pattern-bg"></div>
+    <div class="glow-overlay" id="ambient-glow"></div>
+
+    <!-- Main Scene -->
+    <div class="relative z-20 flex flex-col items-center w-full max-w-lg">
+        
+        <!-- The Lantern -->
+        <div class="lantern-container group relative mb-10" id="lantern" onclick="lightUp()">
+            <!-- String -->
+            <div class="w-1 h-40 bg-gradient-to-b from-gray-800 to-gray-600 mx-auto absolute -top-40 left-1/2 -translate-x-1/2"></div>
+            
+            <!-- Glow behind lantern -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-orange-500 rounded-full blur-[60px] opacity-0 transition-opacity duration-700 lamp-light"></div>
+
+            <!-- SVG Lantern -->
+            <svg class="w-48 h-48 lantern-svg drop-shadow-2xl" viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Top Cap -->
+                <path d="M70 60 L130 60 L100 20 Z" fill="#2d3748" class="group-hover:fill-[#4a5568] transition-colors" />
+                <rect x="95" y="0" width="10" height="20" fill="#2d3748" />
+                <circle cx="100" cy="0" r="8" fill="#2d3748" />
+                
+                <!-- Main Glass Body -->
+                <path d="M60 70 L140 70 L160 180 L40 180 Z" fill="rgba(30, 41, 59, 0.8)" stroke="#d69e2e" stroke-width="2" id="glass-body" />
+                
+                <!-- Decorative Grid on Glass -->
+                <path d="M100 70 L100 180 M75 70 L55 180 M125 70 L145 180" stroke="#d69e2e" stroke-width="1" opacity="0.5" />
+
+                <!-- Bottom Base -->
+                <path d="M50 180 L150 180 L130 220 L70 220 Z" fill="#2d3748" />
+                <path d="M90 220 L110 220 L110 240 L90 240 Z" fill="#d69e2e" /> <!-- Tassel holder -->
+
+                <!-- Light Source (Inner Bulb) -->
+                <circle cx="100" cy="130" r="20" fill="#fbbf24" class="opacity-0 transition-opacity duration-500 lamp-light" filter="blur(5px)" />
+            </svg>
+            
+            <!-- Click Hint -->
+            <div id="hint-text" class="absolute -bottom-10 w-full text-center text-gray-400 text-sm animate-pulse tracking-widest">
+                اضغط لتضيء الفانوس
+            </div>
+        </div>
+
+        <!-- Greeting Text Area -->
+        <div id="greeting-area" class="text-center space-y-4 px-4 h-40 flex flex-col justify-center items-center">
+            <h1 class="text-5xl md:text-7xl font-bold ruqaa-font golden-text leading-tight">
+                رمضان مبارك
+            </h1>
+            <p class="text-xl md:text-2xl text-amber-100/90 font-light golden-text delay-75" style="transition-delay: 0.3s;">
+                كل عام وأنتم بألف خير
+            </p>
+        </div>
+    </div>
+
+    <!-- Signature -->
+    <div class="fixed bottom-6 text-center w-full z-10 opacity-30 text-xs text-white font-light tracking-widest">
+        من إعداد قيس جازي
+    </div>
+
+    <script>
+        let isLit = false;
+
+        function lightUp() {
+            if (isLit) return;
+            isLit = true;
+
+            const body = document.body;
+            const glassBody = document.getElementById('glass-body');
+            const hintText = document.getElementById('hint-text');
+            const greetingArea = document.getElementById('greeting-area');
+
+            // 1. Activate Scene Classes
+            body.classList.add('active-scene');
+            greetingArea.classList.add('show-text');
+
+            // 2. Change Lantern Appearance
+            glassBody.setAttribute('fill', 'url(#gradientLight)'); // We need to add defs dynamically or just toggle CSS
+            glassBody.style.fill = "rgba(255, 230, 100, 0.8)";
+            glassBody.style.filter = "drop-shadow(0 0 15px rgba(255, 165, 0, 0.6))";
+
+            // 3. Hide Hint
+            hintText.style.opacity = '0';
+
+            // 4. Trigger Effects
+            createSparkles();
+            playSoundSim(); // Visual sound simulation (vibration)
+        }
+
+        function createSparkles() {
+            const lantern = document.getElementById('lantern');
+            const rect = lantern.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Create explosion of particles
+            for (let i = 0; i < 60; i++) {
+                setTimeout(() => {
+                    const p = document.createElement('div');
+                    p.classList.add('particle');
+                    document.body.appendChild(p);
+
+                    // Random size
+                    const size = Math.random() * 5 + 2;
+                    p.style.width = `${size}px`;
+                    p.style.height = `${size}px`;
+                    
+                    // Start position (center of lantern)
+                    p.style.left = `${centerX}px`;
+                    p.style.top = `${centerY}px`;
+
+                    // Random direction
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = Math.random() * 200 + 50; // Distance
+                    const tx = Math.cos(angle) * velocity;
+                    const ty = Math.sin(angle) * velocity;
+
+                    // Animation
+                    p.animate([
+                        { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                        { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                    ], {
+                        duration: 1000 + Math.random() * 1000,
+                        easing: 'cubic-bezier(0, .9, .57, 1)'
+                    }).onfinish = () => p.remove();
+                }, i * 10);
+            }
+        }
+
+        function playSoundSim() {
+            // Visualize a "thud" or "switch" impact
+            const lantern = document.getElementById('lantern');
+            lantern.animate([
+                { transform: 'scale(1)' },
+                { transform: 'scale(1.1)' },
+                { transform: 'scale(1)' }
+            ], {
+                duration: 200,
+                easing: 'ease-out'
+            });
+        }
+    </script>
+</body>
+</html>
+
